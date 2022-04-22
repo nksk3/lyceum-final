@@ -7,29 +7,31 @@ from telegram.ext import (
     CallbackContext,
 )
 
+import points
 
-def start(update: Update, context: CallbackContext) -> None:
+
+def start(update: Update, context: CallbackContext):
     """Send a message when the command /start is issued."""
     user = update.effective_user
-    print("test")
     update.message.reply_markdown_v2(
         rf"Hi {user.mention_markdown_v2()}\!",
         reply_markup=ForceReply(selective=True),
     )
 
 
-def help_command(update: Update, context: CallbackContext) -> None:
+def help_command(update: Update, context: CallbackContext):
     """Send a message when the command /help is issued."""
     update.message.reply_text("Help!")
 
 
-def echo(update: Update, context: CallbackContext) -> None:
+def echo(update: Update, context: CallbackContext):
     """Echo the user message."""
     update.message.reply_text(update.message.text)
 
 
-if __name__ == "main":
+if __name__ == "__main__":
     """Start the bot."""
+    points.init_db()
     updater = Updater("5383383919:AAFn0onV6ifKX_QwbhqmH5DAG41eFGkBQsw")
 
     dispatcher = updater.dispatcher
