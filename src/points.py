@@ -3,7 +3,7 @@ import sqlite3
 
 def init_db(file="data.db"):
     global con
-    con = sqlite3.connect(file)
+    con = sqlite3.connect(file, check_same_thread=False)
 
     con.executescript(
         """
