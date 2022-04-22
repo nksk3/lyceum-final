@@ -35,3 +35,4 @@ Temporary Items
 .apdisk
 
 *.db
+*.db-journal
