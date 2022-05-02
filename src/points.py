@@ -18,10 +18,17 @@ CREATE TABLE IF NOT EXISTS "Students" (
 "class_id" INTEGER,
 "points" INTEGER
 );
+CREATE TRIGGER IF NOT EXISTS check_duplicate_classes
+BEFORE INSERT ON Classes
+BEGIN
+  SELECT RAISE(ABORT, "Duplicate classes")
+  WHERE EXISTS(SELECT * FROM Classes
+               WHERE user_id = NEW.user_id AND name = NEW.name);
+END;
 CREATE TRIGGER IF NOT EXISTS check_duplicate_studnets
 BEFORE INSERT ON Students
 BEGIN
-  SELECT RAISE(ABORT, "Duplicate student")
+  SELECT RAISE(ABORT, "Duplicate students")
   WHERE EXISTS(SELECT * FROM Students
                WHERE class_id = NEW.class_id AND name = NEW.name);
 END;
@@ -33,12 +40,14 @@ def add_class(uid, name):
     con.execute(
         "INSERT INTO Classes (user_id, name) VALUES(?, ?)", (uid, name)
     )
+    con.commit()
 
 
 def add_student(cl, name):
     con.execute(
         "INSERT INTO Students (name, class_id) VALUES(?, ?)", (cl, name)
     )
+    con.commit()
 
 
 def get_classes(uid):
@@ -47,15 +56,8 @@ def get_classes(uid):
     ).fetchall()
 
 
-def get_student_names(cl):
-    return con.execute("SELECT name FROM Students WHERE class_id = ?", (cl,))
-
-
-def get_student_points(cl, name):
-    return con.execute(
-        "SELECT points FROM Students WHERE class_id = ? AND name = ?",
-        (cl, name),
-    ).fetchone()[0]
+def get_students(cl):
+    return con.execute("SELECT name, points FROM Students WHERE class_id = ?", (cl,)).fetchall()
 
 
 def set_student_points(cl, name, n):

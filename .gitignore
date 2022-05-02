@@ -36,3 +36,5 @@ Temporary Items
 
 *.db
 *.db-journal
+
+/BOT_KEY
