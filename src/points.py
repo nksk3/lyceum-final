@@ -37,16 +37,12 @@ END;
 
 
 def add_class(uid, name):
-    con.execute(
-        "INSERT INTO Classes (user_id, name) VALUES(?, ?)", (uid, name)
-    )
+    con.execute("INSERT INTO Classes (user_id, name) VALUES(?, ?)", (uid, name))
     con.commit()
 
 
 def add_student(cl, name):
-    con.execute(
-        "INSERT INTO Students (name, class_id) VALUES(?, ?)", (cl, name)
-    )
+    con.execute("INSERT INTO Students (name, class_id) VALUES(?, ?)", (cl, name))
     con.commit()
 
 
@@ -57,7 +53,9 @@ def get_classes(uid):
 
 
 def get_students(cl):
-    return con.execute("SELECT name, points FROM Students WHERE class_id = ?", (cl,)).fetchall()
+    return con.execute(
+        "SELECT name, points FROM Students WHERE class_id = ?", (cl,)
+    ).fetchall()
 
 
 def set_student_points(cl, name, n):
