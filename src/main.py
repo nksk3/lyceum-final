@@ -23,7 +23,12 @@ def main_keyboard():
 @bot.message_handler(commands=["help", "start"])
 def cmd_main(msg):
     bot.reply_to(
-        msg, """hi there! this is a main menu!""", reply_markup=main_keyboard()
+        msg,
+        """Available commands are:
+/open_class - open class
+/new_class - create class
+/remove_class - remove class""",
+        reply_markup=main_keyboard(),
     )
 
 
@@ -48,8 +53,7 @@ def select_class(msg):
             + "\n".join(
                 [f"{x} {y}"
                  for x, y in enumerate(points.get_students(selected))]
-            ),
-            parse_mode="Markdown"
+            )
         )
     except:
         bot.send_message(msg.chat.id, "Oops!")
@@ -80,14 +84,27 @@ def cmd_clear_points(msg):
     pass
 
 
-@bot.message_handler(commands=["edit_class"])
-def cmd_edit_class(msg):
-    pass
-
-
 @bot.message_handler(commands=["remove_class"])
 def cmd_remove_class(msg):
-    pass
+    bot.send_message(
+        msg.chat.id,
+        'Available classes:\n' +
+        "\n".join([f"{x}"
+                   for _, x in points.get_classes(msg.chat.id)]) +
+        '\nEnter the class name to remove. Or enter "cancel" (case-insensitive) to cancel the operation',
+    )
+    bot.register_next_step_handler(msg, remove_class)
+
+
+def remove_class(msg):
+    if msg.text.lower() == "cancel":
+        bot.send_message(msg.chat.id, "Cancelled!")
+    else:
+        try:
+            points.remove_class(msg.chat.id, msg.text)
+            bot.send_message(msg.chat.id, f"Removed {msg.text}")
+        except:
+            bot.send_message(msg.chat.id, "Oops!")
 
 
 @bot.message_handler(commands=["test"])

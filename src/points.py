@@ -46,6 +46,11 @@ def add_student(cl, name):
     con.commit()
 
 
+def remove_class(uid, cl):
+    con.execute("DELETE FROM Classes WHERE user_id = ? AND name = ?", (uid, cl))
+    con.commit()
+
+
 def get_classes(uid):
     return con.execute(
         "SELECT class_id, name FROM Classes WHERE user_id = ?", (uid,)
