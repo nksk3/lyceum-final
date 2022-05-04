@@ -42,7 +42,7 @@ def add_class(uid, name):
 
 
 def add_student(cl, name):
-    con.execute("INSERT INTO Students (name, class_id) VALUES(?, ?)", (cl, name))
+    con.execute("INSERT INTO Students (class_id, name, points) VALUES(?, ?, 0)", (cl, name))
     con.commit()
 
 
