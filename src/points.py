@@ -37,22 +37,31 @@ END;
 
 
 def add_class(uid, name):
-    con.execute("INSERT INTO Classes (user_id, name) VALUES(?, ?)", (uid, name))
+    con.execute(
+        "INSERT INTO Classes (user_id, name) VALUES(?, ?)", (uid, name)
+    )
     con.commit()
 
 
 def add_student(cl, name):
-    con.execute("INSERT INTO Students (class_id, name, points) VALUES(?, ?, 0)", (cl, name))
+    con.execute(
+        "INSERT INTO Students (class_id, name, points) VALUES(?, ?, 0)",
+        (cl, name),
+    )
     con.commit()
 
 
 def remove_class(uid, cl):
-    con.execute("DELETE FROM Classes WHERE user_id = ? AND name = ?", (uid, cl))
+    con.execute(
+        "DELETE FROM Classes WHERE user_id = ? AND name = ?", (uid, cl)
+    )
     con.commit()
 
 
 def remove_student(cl, name):
-    con.execute("DELETE FROM Students WHERE class_id = ? AND name = ?", (cl, name))
+    con.execute(
+        "DELETE FROM Students WHERE class_id = ? AND name = ?", (cl, name)
+    )
     con.commit()
 
 
@@ -69,5 +78,8 @@ def get_students(cl):
 
 
 def set_student_points(cl, name, n):
-    con.execute("UPDATE Students SET points = ? WHERE class_id = ? AND name = ?", (n, cl, name))
+    con.execute(
+        "UPDATE Students SET points = ? WHERE class_id = ? AND name = ?",
+        (n, cl, name),
+    )
     con.commit()

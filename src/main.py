@@ -83,16 +83,7 @@ async def open_class(msg):
                     if x == msg.text
                 )
             )
-            await bot.send_message(
-                msg.chat.id,
-                "Class students:\n"
-                + "\n".join(
-                    (
-                        f"{x} - {p}"
-                        for x, p in sorted(points.get_students(data["class"]))
-                    )
-                ),
-            )
+            await list_students(msg.chat.id, data["class"])
         await bot.send_message(
             msg.chat.id, "Enter student name to change their points"
         )
@@ -111,7 +102,8 @@ async def add_student(msg):
     await bot.set_state(msg.from_user.id, States.open_class_input, msg.chat.id)
     async with bot.retrieve_data(msg.from_user.id, msg.chat.id) as data:
         points.add_student(data["class"], msg.text)
-    await bot.send_message(msg.from_user.id, "Added student")
+        await bot.send_message(msg.from_user.id, "Added student")
+        await list_students(msg.chat.id, data["class"])
 
 
 @bot.message_handler(
@@ -129,7 +121,8 @@ async def remove_student(msg):
     await bot.set_state(msg.from_user.id, States.open_class_input, msg.chat.id)
     async with bot.retrieve_data(msg.from_user.id, msg.chat.id) as data:
         points.remove_student(data["class"], msg.text)
-    await bot.send_message(msg.from_user.id, "Removed student")
+        await bot.send_message(msg.from_user.id, "Removed student")
+        await list_students(msg.chat.id, data["class"])
 
 
 @bot.message_handler(state=States.open_class_input)
@@ -172,6 +165,7 @@ async def change_points(msg):
                 else (data["points"] + int(msg.text)),
             )
             await bot.send_message(msg.chat.id, "Changed points")
+            await list_students(msg.chat.id, data["class"])
     except Exception as e:
         print(e)
         await bot.send_message(msg.chat.id, "Oops!")
@@ -182,6 +176,19 @@ async def list_classes(chat_id):
         chat_id,
         "Available classes:\n"
         + "\n".join((x for _, x in points.get_classes(chat_id))),
+    )
+
+
+async def list_students(uid, class_id):
+    await bot.send_message(
+        uid,
+        "Class students:\n"
+        + "\n".join(
+            (
+                f"{x} - {p}"
+                for x, p in sorted(points.get_students(class_id))
+            )
+        ),
     )
 
 
