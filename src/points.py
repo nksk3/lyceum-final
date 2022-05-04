@@ -51,6 +51,11 @@ def remove_class(uid, cl):
     con.commit()
 
 
+def remove_student(cl, name):
+    con.execute("DELETE FROM Students WHERE class_id = ? AND name = ?", (cl, name))
+    con.commit()
+
+
 def get_classes(uid):
     return con.execute(
         "SELECT class_id, name FROM Classes WHERE user_id = ?", (uid,)
@@ -64,4 +69,5 @@ def get_students(cl):
 
 
 def set_student_points(cl, name, n):
-    pass
+    con.execute("UPDATE Students SET points = ? WHERE class_id = ? AND name = ?", (n, cl, name))
+    con.commit()
