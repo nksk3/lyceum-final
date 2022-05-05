@@ -77,9 +77,9 @@ def get_students(cl):
     ).fetchall()
 
 
-def set_student_points(cl, name, n):
+def set_student_points(classs, name, num):
     con.execute(
         "UPDATE Students SET points = ? WHERE class_id = ? AND name = ?",
-        (n, cl, name),
+        (num, classs, name),
     )
     con.commit()
